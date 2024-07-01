@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/category.dart';
 
 class CategoryGridItem extends StatelessWidget {
-  const CategoryGridItem({super.key, required this.category});
+  const CategoryGridItem(
+      {super.key, required this.category, required this.onChangeScreen});
 
   final Category category;
+
+  final void Function() onChangeScreen;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onChangeScreen,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
