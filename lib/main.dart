@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_demo/categories.dart';
+import 'package:navigation_demo/screen/categories.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
