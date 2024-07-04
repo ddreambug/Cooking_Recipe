@@ -6,14 +6,19 @@ import 'package:navigation_demo/models/meal.dart';
 // Constants in Dart should be written in lowerCamelcase.
 const availableCategories = [
   Category(
-    id: 'c1',
-    title: 'Italian',
-    color: Colors.purple,
+    id: 'c0',
+    title: 'All Food',
+    color: Color.fromARGB(255, 255, 105, 155),
   ),
   Category(
     id: 'c2',
     title: 'Quick & Easy',
     color: Colors.red,
+  ),
+  Category(
+    id: 'c1',
+    title: 'Italian',
+    color: Colors.purple,
   ),
   Category(
     id: 'c3',
@@ -61,6 +66,7 @@ const dummyMeals = [
   Meal(
     id: 'm1',
     categories: [
+      'c0',
       'c1',
       'c2',
     ],
@@ -96,6 +102,7 @@ const dummyMeals = [
     id: 'm2',
     categories: [
       'c2',
+      'c0',
     ],
     title: 'Toast Hawaii',
     affordability: Affordability.affordable,
@@ -125,6 +132,7 @@ const dummyMeals = [
     categories: [
       'c2',
       'c3',
+      'c0',
     ],
     title: 'Classic Hamburger',
     affordability: Affordability.pricey,
@@ -156,6 +164,7 @@ const dummyMeals = [
     id: 'm4',
     categories: [
       'c4',
+      'c0',
     ],
     title: 'Wiener Schnitzel',
     affordability: Affordability.luxurious,
@@ -190,9 +199,10 @@ const dummyMeals = [
   Meal(
     id: 'm5',
     categories: [
-      'c2'
-          'c5',
+      'c2',
+      'c5',
       'c10',
+      'c0',
     ],
     title: 'Salad with Smoked Salmon',
     affordability: Affordability.luxurious,
@@ -228,6 +238,7 @@ const dummyMeals = [
     categories: [
       'c6',
       'c10',
+      'c0',
     ],
     title: 'Delicious Orange Mousse',
     affordability: Affordability.affordable,
@@ -263,6 +274,7 @@ const dummyMeals = [
     id: 'm7',
     categories: [
       'c7',
+      'c0',
     ],
     title: 'Pancakes',
     affordability: Affordability.affordable,
@@ -294,6 +306,7 @@ const dummyMeals = [
     id: 'm8',
     categories: [
       'c8',
+      'c0',
     ],
     title: 'Creamy Indian Chicken Curry',
     affordability: Affordability.pricey,
@@ -327,6 +340,7 @@ const dummyMeals = [
     id: 'm9',
     categories: [
       'c9',
+      'c0',
     ],
     title: 'Chocolate Souffle',
     affordability: Affordability.affordable,
@@ -378,6 +392,7 @@ const dummyMeals = [
       'c2',
       'c5',
       'c10',
+      'c0',
     ],
     title: 'Asparagus Salad with Cherry Tomatoes',
     affordability: Affordability.luxurious,
