@@ -27,7 +27,7 @@ class MealItem extends StatelessWidget {
               //fit = wrapping imagenya, cover agar di zoom menyesuaikan ukuran
               //fadeinimage = buat efek fadein pas render build
               //MemImage = image dari memori (pub transparent image)
-              // Networkimage = image dari url
+              //Networkimage = image dari url
             ),
             Positioned(
               bottom: 0,
