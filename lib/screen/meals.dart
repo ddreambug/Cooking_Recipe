@@ -14,7 +14,6 @@ class Meals extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => DetailScreen(
-          title: meal.title,
           meal: meal,
         ),
       ),
