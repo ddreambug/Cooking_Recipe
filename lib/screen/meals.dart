@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
-import 'package:navigation_demo/screen/details.dart';
+import 'package:navigation_demo/screen/meal_details.dart';
 import 'package:navigation_demo/widget/meal_item.dart';
 
 class Meals extends StatelessWidget {
@@ -13,7 +13,7 @@ class Meals extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailScreen(
+        builder: (context) => MealDetail(
           meal: meal,
         ),
       ),

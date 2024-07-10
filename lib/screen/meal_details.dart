@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
 
-class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key, required this.meal});
+class MealDetail extends StatelessWidget {
+  const MealDetail({super.key, required this.meal});
 
   final Meal meal;
 
