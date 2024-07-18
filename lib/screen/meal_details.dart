@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
 
-class MealDetail extends StatelessWidget {
+class MealDetail extends StatefulWidget {
   const MealDetail(
       {super.key,
       required this.meal,
@@ -13,10 +13,23 @@ class MealDetail extends StatelessWidget {
   final List<Meal>? favMeal;
 
   @override
+  State<MealDetail> createState() {
+    return MealDetailState();
+  }
+}
+
+class MealDetailState extends State<MealDetail> {
+  @override
   Widget build(BuildContext context) {
+    //derived from widget class, biar ga banyak ubah karena ini convert dari stateless ke stateful
+    final meal = widget.meal;
+    final favMeal = widget.favMeal;
+    final void Function(Meal meal) onToggledFavourite =
+        widget.onToggledFavourite;
+
     var appBarIcon = Icons.star_border;
     var favouriteStatus = favMeal!.contains(meal);
-    if (favMeal != null && favouriteStatus) {
+    if (favouriteStatus) {
       appBarIcon = Icons.star;
     }
     return Scaffold(
@@ -25,7 +38,9 @@ class MealDetail extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                onToggledFavourite(meal);
+                setState(() {
+                  onToggledFavourite(meal);
+                });
               },
               icon: Icon(appBarIcon))
         ],
