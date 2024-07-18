@@ -2,15 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
 
 class MealDetail extends StatelessWidget {
-  const MealDetail({super.key, required this.meal});
+  const MealDetail(
+      {super.key,
+      required this.meal,
+      required this.onToggledFavourite,
+      this.favMeal});
 
   final Meal meal;
+  final void Function(Meal meal) onToggledFavourite;
+  final List<Meal>? favMeal;
 
   @override
   Widget build(BuildContext context) {
+    var appBarIcon = Icons.star_border;
+    var favouriteStatus = favMeal!.contains(meal);
+    if (favMeal != null && favouriteStatus) {
+      appBarIcon = Icons.star;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                onToggledFavourite(meal);
+              },
+              icon: Icon(appBarIcon))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
