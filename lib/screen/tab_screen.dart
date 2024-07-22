@@ -4,7 +4,9 @@ import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/meals.dart';
 
 class TabScreen extends StatefulWidget {
-  const TabScreen({super.key});
+  const TabScreen({
+    super.key,
+  });
   @override
   State<TabScreen> createState() {
     return _TabScreenState();
@@ -19,6 +21,15 @@ class _TabScreenState extends State<TabScreen> {
     });
   }
 
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message, textAlign: TextAlign.center),
+      duration: const Duration(seconds: 1),
+      backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+    ));
+  }
+
   //listing favourite meals
   final List<Meal> _favMeal = [];
   void _toggleFavourite(Meal meal) {
@@ -27,22 +38,10 @@ class _TabScreenState extends State<TabScreen> {
 
       if (isExisting) {
         _favMeal.remove(meal);
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              const Text('Removed from Favourite', textAlign: TextAlign.center),
-          duration: const Duration(seconds: 1),
-          backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        ));
+        _showSnackbar('Removed from Favourite');
       } else {
         _favMeal.add(meal);
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              const Text('Added to Favourite', textAlign: TextAlign.center),
-          duration: const Duration(seconds: 1),
-          backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        ));
+        _showSnackbar('Added to Favourite');
       }
     });
   }
