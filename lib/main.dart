@@ -5,7 +5,7 @@ final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
-    seedColor: const Color.fromARGB(255, 235, 255, 53),
+    seedColor: const Color.fromARGB(255, 218, 230, 50),
   ),
 );
 

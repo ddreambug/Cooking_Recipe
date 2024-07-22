@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/meals.dart';
+import 'package:navigation_demo/widget/main_drawer.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({
@@ -19,6 +20,13 @@ class _TabScreenState extends State<TabScreen> {
     setState(() {
       _selectedPageIndex = index;
     });
+  }
+
+  void _setScreen(String identifier) {
+    if (identifier == 'Filters') {
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   void _showSnackbar(String message) {
@@ -67,6 +75,7 @@ class _TabScreenState extends State<TabScreen> {
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
+      drawer: MainDrawer(onTapDrawer: _setScreen),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
