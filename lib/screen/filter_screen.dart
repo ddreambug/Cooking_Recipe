@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_demo/widget/filter_property.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -9,7 +10,24 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  var _glutenFreeFilterSet = false;
+  // var _glutenFreeFilterSet = false;
+  // var _veganFilterSet = false;
+  // var _vegetarianFilterSet = false;
+  // var _LactoseFreeFilterSet = false;
+
+  final Map<String, bool> _filters = {
+    'Gluten-Free': false,
+    'Vegan': false,
+    'Vegetarian': false,
+    'Lactose-Free': false,
+  };
+
+  void switchChanged(String switchTitle, bool switchValue) {
+    setState(() {
+      _filters[switchTitle] = switchValue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,32 +35,35 @@ class _FilterScreenState extends State<FilterScreen> {
         title: const Text('Your Filters'),
       ),
       body: Column(
-        children: [
-          SwitchListTile(
-            value: _glutenFreeFilterSet,
-            onChanged: (isChecked) {
-              setState(() {
-                _glutenFreeFilterSet = isChecked;
-              });
-            },
-            title: Text(
-              'Gluten-Free',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
-            ),
-            subtitle: Text(
-              'Only include Gluten-Free meals',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
-            ),
-            activeColor: Theme.of(context).colorScheme.tertiary,
-            contentPadding: const EdgeInsets.only(left: 30, right: 30),
-          )
-        ],
+        children: _filters.keys.map((filter) {
+          return FilterProperty(
+              title: filter,
+              subtitle: 'Only Include $filter Meal',
+              filterValue: _filters[filter]!,
+              onSwitchChanged: switchChanged);
+        }).toList(),
+        // children: [
+        //   FilterProperty(
+        //       title: 'Gluten-Free',
+        //       subtitle: 'Only Include Gluten-Free Meal',
+        //       filterValue: _glutenFreeFilterSet,
+        //       onSwitchChanged: switchChanged),
+        //   FilterProperty(
+        //       title: 'Vegan',
+        //       subtitle: 'Only Include Vegan Meal',
+        //       filterValue: _veganFilterSet,
+        //       onSwitchChanged: switchChanged),
+        //   FilterProperty(
+        //       title: 'Vegetarian',
+        //       subtitle: 'Only Include Vegetarian Meal',
+        //       filterValue: _vegetarianFilterSet,
+        //       onSwitchChanged: switchChanged),
+        //   FilterProperty(
+        //       title: 'Lactose-Free',
+        //       subtitle: 'Only Include Lactose-Free Meal',
+        //       filterValue: _LactoseFreeFilterSet,
+        //       onSwitchChanged: switchChanged)
+        // ],
       ),
     );
   }
