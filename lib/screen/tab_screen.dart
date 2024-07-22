@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/screen/categories.dart';
+import 'package:navigation_demo/screen/filter_screen.dart';
 import 'package:navigation_demo/screen/meals.dart';
 import 'package:navigation_demo/widget/main_drawer.dart';
 
 class TabScreen extends StatefulWidget {
-  const TabScreen({
-    super.key,
-  });
+  const TabScreen({super.key});
   @override
   State<TabScreen> createState() {
     return _TabScreenState();
@@ -23,9 +22,13 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _setScreen(String identifier) {
+    Navigator.of(context).pop();
     if (identifier == 'Filters') {
-    } else {
-      Navigator.of(context).pop();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const FilterScreen(),
+        ),
+      );
     }
   }
 
