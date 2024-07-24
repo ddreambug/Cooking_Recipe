@@ -16,23 +16,18 @@ class FilterProperty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SwitchListTile(
       value: filterValue,
-      onChanged: (isSelected) {
-        onSwitchChanged(title, isSelected);
-      },
+      onChanged: (isSelected) => onSwitchChanged(title, isSelected),
       title: Text(
         title,
-        style: Theme.of(context)
-            .textTheme
-            .titleLarge!
+        style: theme.textTheme.titleLarge!
             .copyWith(color: Theme.of(context).colorScheme.onBackground),
       ),
       subtitle: Text(
         subtitle,
-        style: Theme.of(context)
-            .textTheme
-            .labelLarge!
+        style: theme.textTheme.labelLarge!
             .copyWith(color: Theme.of(context).colorScheme.onBackground),
       ),
       activeColor: Theme.of(context).colorScheme.tertiary,
