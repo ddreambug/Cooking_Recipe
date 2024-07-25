@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_demo/data/dummy_data.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/filter_screen.dart';
 import 'package:navigation_demo/screen/meals.dart';
 import 'package:navigation_demo/widget/main_drawer.dart';
+
+const kInitialFilter = {
+  'Gluten-Free': false,
+  'Vegan': false,
+  'Vegetarian': false,
+  'Lactose-Free': false,
+};
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -14,6 +22,8 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
+  Map<String, bool> _selectedFilter = kInitialFilter;
+
   int _selectedPageIndex = 0;
   void _selectPage(index) {
     setState(() {
@@ -22,14 +32,20 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _setScreen(String identifier) async {
+    // Navigate to filter screen and wait for a result
     Navigator.of(context).pop();
     if (identifier == 'Filters') {
       final result = await Navigator.of(context).push<Map<String, bool>>(
         MaterialPageRoute(
-          builder: (context) => const FilterScreen(),
+          builder: (ctx) => const FilterScreen(),
         ),
       );
-      print(result);
+
+      setState(() {
+        _selectedFilter = result ?? kInitialFilter;
+      });
+
+      print(_selectedFilter);
     }
   }
 
@@ -60,10 +76,28 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //filter the meal based on filter value
+    final filteredMeal = dummyMeals.where((meal) {
+      if (_selectedFilter['Gluten-Free']! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilter['Vegan']! && !meal.isVegan) {
+        return false;
+      }
+      if (_selectedFilter['Vegetarian']! && !meal.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilter['Lactose-Free']! && !meal.isLactoseFree) {
+        return false;
+      }
+      return true;
+    }).toList();
+
     //navigating thru this 2 screen
     Widget activePage = CategoriesScreen(
       onToggledFavourite: _toggleFavourite,
       favMeal: _favMeal,
+      filteredMeal: filteredMeal,
     );
     var activePageTitle = 'Pick Your Category';
     if (_selectedPageIndex == 1) {
