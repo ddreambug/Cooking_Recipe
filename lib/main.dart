@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/screen/tab_screen.dart';
 
 final theme = ThemeData(
@@ -18,9 +19,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: theme,
-      home: const TabScreen(),
+    return ProviderScope(
+      child: MaterialApp(
+        theme: theme,
+        home: const TabScreen(),
+      ),
     );
   }
 }
