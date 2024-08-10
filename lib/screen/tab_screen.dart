@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_demo/data/dummy_data.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/filter_screen.dart';
