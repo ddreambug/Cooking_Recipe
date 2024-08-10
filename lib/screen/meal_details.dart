@@ -1,46 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/models/meal.dart';
+import 'package:navigation_demo/providers/favorite_provider.dart';
 
-class MealDetail extends StatefulWidget {
-  const MealDetail(
-      {super.key,
-      required this.meal,
-      required this.onToggledFavourite,
-      this.favMeal});
+class MealDetail extends ConsumerWidget {
+  const MealDetail({
+    super.key,
+    required this.meal,
+  });
 
   final Meal meal;
-  final void Function(Meal meal) onToggledFavourite;
-  final List<Meal>? favMeal;
 
   @override
-  State<MealDetail> createState() {
-    return MealDetailState();
-  }
-}
-
-class MealDetailState extends State<MealDetail> {
-  @override
-  Widget build(BuildContext context) {
-    //derived from widget class, biar ga banyak ubah karena ini convert dari stateless ke stateful
-    final meal = widget.meal;
-    final favMeal = widget.favMeal;
-    final void Function(Meal meal) onToggledFavourite =
-        widget.onToggledFavourite;
-
+  Widget build(BuildContext context, WidgetRef ref) {
     var appBarIcon = Icons.star_border;
-    var favouriteStatus = favMeal!.contains(meal);
-    if (favouriteStatus) {
-      appBarIcon = Icons.star;
-    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                  onToggledFavourite(meal);
-                });
+                final isFavorite = ref
+                    .read(favoriteMealsProvider.notifier)
+                    .toggleMealFavoriteStatus(meal);
+
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      isFavorite
+                          ? 'Meal added as a Favorite'
+                          : 'Meal removed from Favorite',
+                      textAlign: TextAlign.center),
+                  duration: const Duration(seconds: 1),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.onPrimaryContainer,
+                ));
               },
               icon: Icon(appBarIcon))
         ],

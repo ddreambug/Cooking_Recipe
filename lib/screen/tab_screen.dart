@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/filter_screen.dart';
 import 'package:navigation_demo/screen/meals.dart';
 import 'package:navigation_demo/widget/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/providers/meal_provider.dart';
+import 'package:navigation_demo/providers/favorite_provider.dart';
 
 Map<String, bool> kInitialFilter = {
   'Gluten-Free': false,
@@ -50,31 +50,6 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     }
   }
 
-  void _showSnackbar(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message, textAlign: TextAlign.center),
-      duration: const Duration(seconds: 1),
-      backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-    ));
-  }
-
-  //listing favourite meals
-  final List<Meal> _favMeal = [];
-  void _toggleFavourite(Meal meal) {
-    setState(() {
-      var isExisting = _favMeal.contains(meal);
-
-      if (isExisting) {
-        _favMeal.remove(meal);
-        _showSnackbar('Removed from Favourite');
-      } else {
-        _favMeal.add(meal);
-        _showSnackbar('Added to Favourite');
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     //get data from provider
@@ -98,16 +73,13 @@ class _TabScreenState extends ConsumerState<TabScreen> {
 
     //navigating thru this 2 screen
     Widget activePage = CategoriesScreen(
-      onToggledFavourite: _toggleFavourite,
-      favMeal: _favMeal,
       filteredMeal: filteredMeal,
     );
     var activePageTitle = 'Pick Your Category';
     if (_selectedPageIndex == 1) {
+      final favoriteMeals = ref.watch(favoriteMealsProvider);
       activePage = Meals(
-        meals: _favMeal,
-        onToggledFavourite: _toggleFavourite,
-        favMeal: _favMeal,
+        meals: favoriteMeals,
       );
       activePageTitle = 'Favourites';
     }

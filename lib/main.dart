@@ -11,7 +11,7 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const App());
+  runApp(const ProviderScope(child: App()));
 }
 
 class App extends StatelessWidget {
@@ -19,11 +19,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-        theme: theme,
-        home: const TabScreen(),
-      ),
+    return MaterialApp(
+      theme: theme,
+      home: const TabScreen(),
     );
   }
 }
