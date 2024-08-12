@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_demo/widget/filter_property.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:navigation_demo/providers/filter_provider.dart';
 
-class FilterScreen extends StatefulWidget {
+class FilterScreen extends ConsumerStatefulWidget {
   const FilterScreen({super.key});
   @override
-  State<FilterScreen> createState() {
+  ConsumerState<FilterScreen> createState() {
     return _FilterScreenState();
   }
 }
 
-class _FilterScreenState extends State<FilterScreen> {
-  final Map<String, bool> _filters = {
-    'Gluten-Free': false,
-    'Vegan': false,
-    'Vegetarian': false,
-    'Lactose-Free': false,
-  };
-
-  void switchChanged(String switchTitle, bool switchValue) {
-    setState(() {
-      _filters[switchTitle] = switchValue;
-    });
-  }
-
+class _FilterScreenState extends ConsumerState<FilterScreen> {
   @override
   Widget build(BuildContext context) {
+    final defaultFilter = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Filters'),
@@ -34,15 +24,15 @@ class _FilterScreenState extends State<FilterScreen> {
         canPop: false,
         onPopInvoked: (didPop) {
           if (didPop) return;
-          Navigator.of(context).pop(_filters);
+          Navigator.of(context).pop(defaultFilter);
         },
         child: Column(
-          children: _filters.keys.map((filter) {
+          children: defaultFilter.keys.map((filter) {
             return FilterProperty(
-                title: filter,
-                subtitle: 'Only Include $filter Meal',
-                filterValue: _filters[filter]!,
-                onSwitchChanged: switchChanged);
+              title: filter,
+              subtitle: 'Only Include $filter Meal',
+              filterValue: defaultFilter[filter]!,
+            );
           }).toList(),
         ),
       ),

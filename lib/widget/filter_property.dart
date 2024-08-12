@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:navigation_demo/providers/filter_provider.dart';
 
-class FilterProperty extends StatelessWidget {
+class FilterProperty extends ConsumerWidget {
   const FilterProperty({
     super.key,
     required this.title,
     required this.subtitle,
     required this.filterValue,
-    required this.onSwitchChanged,
   });
 
-  final void Function(String, bool) onSwitchChanged;
   final bool filterValue;
   final String title;
   final String subtitle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return SwitchListTile(
       value: filterValue,
-      onChanged: (isSelected) => onSwitchChanged(title, isSelected),
+      onChanged: (isSelected) =>
+          ref.read(filterProvider.notifier).toggleFilter(title, isSelected),
       title: Text(
         title,
         style: theme.textTheme.titleLarge!
