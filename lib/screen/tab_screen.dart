@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_demo/providers/filter_provider.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/filter_screen.dart';
 import 'package:navigation_demo/screen/meals.dart';
 import 'package:navigation_demo/widget/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:navigation_demo/providers/meal_provider.dart';
 import 'package:navigation_demo/providers/favorite_provider.dart';
 
 Map<String, bool> kInitialFilter = {
@@ -52,24 +52,8 @@ class _TabScreenState extends ConsumerState<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //get data from provider
-    final meals = ref.watch(mealsProvider);
     //filter the meal based on filter value
-    final filteredMeal = meals.where((meal) {
-      if (_selectedFilter['Gluten-Free']! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (_selectedFilter['Vegan']! && !meal.isVegan) {
-        return false;
-      }
-      if (_selectedFilter['Vegetarian']! && !meal.isVegetarian) {
-        return false;
-      }
-      if (_selectedFilter['Lactose-Free']! && !meal.isLactoseFree) {
-        return false;
-      }
-      return true;
-    }).toList();
+    final filteredMeal = ref.watch(filteredMealProvider);
 
     //navigating thru this 2 screen
     Widget activePage = CategoriesScreen(
