@@ -5,7 +5,7 @@ import 'package:navigation_demo/screen/meals.dart';
 import 'package:navigation_demo/models/category.dart';
 import 'package:navigation_demo/widget/category_grid_item.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({
     super.key,
     required this.filteredMeal,
@@ -13,8 +13,33 @@ class CategoriesScreen extends StatelessWidget {
 
   final List<Meal> filteredMeal;
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _changeScreen(BuildContext context, {required Category category}) {
-    final availableMeals = filteredMeal
+    final availableMeals = widget.filteredMeal
         .where((meal) => meal.categories.contains(category.id))
         .toList();
 

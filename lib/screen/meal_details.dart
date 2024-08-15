@@ -13,31 +13,35 @@ class MealDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var appBarIcon = Icons.star_border;
+    var iconNotFavorite = Icons.star_border;
+    var iconFavorite = Icons.star;
+    final favoriteMeals = ref.watch(favoriteMealsProvider);
+    final isMealFavorite = favoriteMeals.contains(meal);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
-              onPressed: () {
-                final isFavorite = ref
-                    .read(favoriteMealsProvider.notifier)
-                    .toggleMealFavoriteStatus(meal);
+            onPressed: () {
+              final isFavorite = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
 
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      isFavorite
-                          ? 'Meal added as a Favorite'
-                          : 'Meal removed from Favorite',
-                      textAlign: TextAlign.center),
-                  duration: const Duration(seconds: 1),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.onPrimaryContainer,
-                ));
-              },
-              icon: Icon(appBarIcon))
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    isFavorite
+                        ? 'Meal added as a Favorite'
+                        : 'Meal removed from Favorite',
+                    textAlign: TextAlign.center),
+                duration: const Duration(seconds: 1),
+                backgroundColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
+              ));
+            },
+            icon: Icon(isMealFavorite ? iconFavorite : iconNotFavorite),
+          )
         ],
       ),
       body: SingleChildScrollView(
