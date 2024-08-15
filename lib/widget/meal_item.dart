@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:navigation_demo/widget/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -31,16 +32,19 @@ class MealItem extends StatelessWidget {
         onTap: showDetails,
         child: Stack(
           children: [
-            FadeInImage(
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity,
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              //fit = wrapping imagenya, cover agar di zoom menyesuaikan ukuran
-              //fadeinimage = buat efek fadein pas render build
-              //MemImage = image dari memori (pub transparent image)
-              //Networkimage = image dari url
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                fit: BoxFit.cover,
+                height: 200,
+                width: double.infinity,
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                //fit = wrapping imagenya, cover agar di zoom menyesuaikan ukuran
+                //fadeinimage = buat efek fadein pas render build
+                //MemImage = image dari memori (pub transparent image)
+                //Networkimage = image dari url
+              ),
             ),
             Positioned(
               bottom: 0,

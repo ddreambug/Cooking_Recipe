@@ -40,19 +40,35 @@ class MealDetail extends ConsumerWidget {
                     Theme.of(context).colorScheme.onPrimaryContainer,
               ));
             },
-            icon: Icon(isMealFavorite ? iconFavorite : iconNotFavorite),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.8, end: 1.0).animate(animation),
+                  child: child,
+                );
+              },
+              child: Icon(
+                isMealFavorite ? iconFavorite : iconNotFavorite,
+                key: ValueKey(isMealFavorite),
+              ),
+            ),
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              meal.imageUrl,
-              height: 250,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero(
+              tag: meal.id,
+              child: Image.network(
+                meal.imageUrl,
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
+
             const SizedBox(height: 15),
             Text('Ingredients',
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
