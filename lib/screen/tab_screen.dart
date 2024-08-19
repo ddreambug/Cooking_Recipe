@@ -3,6 +3,7 @@ import 'package:navigation_demo/providers/filter_provider.dart';
 import 'package:navigation_demo/screen/categories.dart';
 import 'package:navigation_demo/screen/filter_screen.dart';
 import 'package:navigation_demo/screen/meals.dart';
+import 'package:navigation_demo/screen/new_meal.dart';
 import 'package:navigation_demo/widget/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/providers/favorite_provider.dart';
@@ -23,8 +24,6 @@ class TabScreen extends ConsumerStatefulWidget {
 }
 
 class _TabScreenState extends ConsumerState<TabScreen> {
-  Map<String, bool> _selectedFilter = kInitialFilter;
-
   int _selectedPageIndex = 0;
   void _selectPage(index) {
     setState(() {
@@ -33,45 +32,54 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   }
 
   void _setScreen(String identifier) async {
-    // Navigate to filter screen and wait for a result
     Navigator.of(context).pop();
     if (identifier == 'Filters') {
-      final result = await Navigator.of(context).push<Map<String, bool>>(
+      await Navigator.of(context).push<Map<String, bool>>(
         MaterialPageRoute(
           builder: (ctx) => const FilterScreen(),
         ),
       );
-
-      setState(() {
-        _selectedFilter = result ?? kInitialFilter;
-      });
-
-      print(_selectedFilter);
     }
+  }
+
+  void setNewItemScreen() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const NewMeal(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    //filter the meal based on filter value
     final filteredMeal = ref.watch(filteredMealProvider);
-
-    //navigating thru this 2 screen
-    Widget activePage = CategoriesScreen(
-      filteredMeal: filteredMeal,
-    );
     var activePageTitle = 'Pick Your Category';
+    Widget floatingAddItem = FloatingActionButton(
+      onPressed: () {
+        setNewItemScreen();
+      },
+      backgroundColor: const Color.fromARGB(153, 255, 105, 95),
+      shape: const CircleBorder(),
+      elevation: 10,
+      tooltip: 'Add New Item',
+      child: const Icon(Icons.add),
+    );
+
+    Widget activePage = CategoriesScreen(filteredMeal: filteredMeal);
+
+    //bottomNavBar logic
     if (_selectedPageIndex == 1) {
       final favoriteMeals = ref.watch(favoriteMealsProvider);
-      activePage = Meals(
-        meals: favoriteMeals,
-      );
+      activePage = Meals(meals: favoriteMeals);
       activePageTitle = 'Favourites';
+      floatingAddItem = Container();
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(activePageTitle),
-      ),
+      floatingActionButton: floatingAddItem,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      appBar: AppBar(title: Text(activePageTitle)),
       drawer: MainDrawer(onTapDrawer: _setScreen),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
@@ -84,7 +92,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
-            label: 'Favourite',
+            label: 'Favorite',
           ),
         ],
       ),
