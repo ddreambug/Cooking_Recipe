@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/models/meal.dart';
@@ -21,13 +20,13 @@ class _NewMealState extends ConsumerState<NewMeal> {
   late List<String> _enteredSteps;
   late Affordability _enteredAffordability;
   late Complexity _enteredComplexity;
-  Map<String, bool> _enteredCategory = {
+  final Map<String, bool> _enteredCategory = {
     'isGlutenFree': false,
     'isLactoseFree': false,
     'isVegan': false,
     'isVegetarian': false
   };
-  late var _enteredPhotos;
+  late String _enteredPhotos;
 
   void _onsave() {}
 
