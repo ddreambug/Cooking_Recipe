@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/models/meal.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewMeal extends ConsumerStatefulWidget {
   const NewMeal({super.key});
@@ -27,11 +28,40 @@ class _NewMealState extends ConsumerState<NewMeal> {
     'isVegetarian': false
   };
   late String _enteredPhotos;
+  File? _selectedImage;
 
   void _onsave() {}
 
+  void _takePicture() async {
+    final imagePicker = ImagePicker();
+    final pickedImage =
+        await imagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    if (pickedImage == null) {
+      return;
+    }
+    _selectedImage = File(pickedImage.path);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget imageContent = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+            onPressed: _takePicture,
+            child: const Text('Add a Photo (Optional)'))
+      ],
+    );
+    //conditionally render the widget
+    if (_selectedImage != null) {
+      imageContent = Image.file(
+        _selectedImage!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
+    }
+
     return LayoutBuilder(builder: (context, constraints) {
       final screenWidth = constraints.maxWidth; //640
       final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
@@ -111,6 +141,7 @@ class _NewMealState extends ConsumerState<NewMeal> {
                     onSaved: ((newValue) => _enteredTitle = newValue!),
                   ),
                   const SizedBox(height: 15),
+
                   Row(
                     children: [
                       Expanded(
@@ -168,13 +199,16 @@ class _NewMealState extends ConsumerState<NewMeal> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
+                  //filter category
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text('Gluten-Free '),
+                            const Text('Gluten-Free'),
+                            const Spacer(),
                             Switch(
                                 value: _enteredCategory['isGlutenFree']!,
                                 onChanged: (bool value) {
@@ -184,11 +218,11 @@ class _NewMealState extends ConsumerState<NewMeal> {
                                 }),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            const Text('Lactose-Free'),
+                            const Spacer(),
                             Switch(
                                 value: _enteredCategory['isLactoseFree']!,
                                 onChanged: (bool value) {
@@ -196,19 +230,13 @@ class _NewMealState extends ConsumerState<NewMeal> {
                                     _enteredCategory['isLactoseFree'] = value;
                                   });
                                 }),
-                            const Text(' Lactose-Free'),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text('Vegan '),
+                            const Text('Vegan'),
+                            const Spacer(),
                             Switch(
                                 value: _enteredCategory['isVegan']!,
                                 onChanged: (bool value) {
@@ -218,11 +246,11 @@ class _NewMealState extends ConsumerState<NewMeal> {
                                 }),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            const Text('Vegetarian'),
+                            const Spacer(),
                             Switch(
                                 value: _enteredCategory['isVegetarian']!,
                                 onChanged: (bool value) {
@@ -230,21 +258,25 @@ class _NewMealState extends ConsumerState<NewMeal> {
                                     _enteredCategory['isVegetarian'] = value;
                                   });
                                 }),
-                            const Text(' Vegetarian'),
                           ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      const Text('Add a Photo (Optional)'),
-                      const Spacer(),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Add'),
-                      )
-                    ],
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.2),
+                      ),
+                    ),
+                    height: 100,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: imageContent,
                   ),
                   const SizedBox(height: 20),
                   Row(
