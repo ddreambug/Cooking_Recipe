@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_demo/models/meal.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:navigation_demo/providers/firebase_meal_provider.dart';
 
 class NewMeal extends ConsumerStatefulWidget {
   const NewMeal({super.key});
@@ -17,7 +19,7 @@ class _NewMealState extends ConsumerState<NewMeal> {
   final _formKey = GlobalKey<FormState>();
   late String _enteredTitle;
   late int _enteredDuration;
-  late List<String> _enteredIngridients;
+  late List<String> _enteredIngredients;
   late List<String> _enteredSteps;
   late Affordability _enteredAffordability;
   late Complexity _enteredComplexity;
@@ -27,10 +29,35 @@ class _NewMealState extends ConsumerState<NewMeal> {
     'isVegan': false,
     'isVegetarian': false
   };
-  late String _enteredPhotos;
+  late String _photoUrl;
   File? _selectedImage;
 
-  void _onsave() {}
+  void _onsave() async {
+    if (_selectedImage != null) {
+      final storageRef = FirebaseStorage.instance.ref();
+      final imageRef =
+          storageRef.child('images/${DateTime.now().toIso8601String()}.jpg');
+
+      try {
+        await imageRef.putFile(_selectedImage!);
+        _photoUrl = await imageRef.getDownloadURL();
+      } catch (error) {
+        print(error);
+      }
+    } else {
+      _photoUrl = '';
+    }
+
+    ref.read(firebaseMealProvider.notifier).addNewItem(
+        title: _enteredTitle,
+        imageUrl: _photoUrl,
+        duration: _enteredDuration,
+        complexity: _enteredComplexity,
+        affordability: _enteredAffordability,
+        ingredients: _enteredIngredients,
+        steps: _enteredSteps,
+        categories: _enteredCategory);
+  }
 
   void _takePicture() async {
     final imagePicker = ImagePicker();
@@ -39,7 +66,10 @@ class _NewMealState extends ConsumerState<NewMeal> {
     if (pickedImage == null) {
       return;
     }
-    _selectedImage = File(pickedImage.path);
+
+    setState(() {
+      _selectedImage = File(pickedImage.path);
+    });
   }
 
   @override
@@ -119,14 +149,15 @@ class _NewMealState extends ConsumerState<NewMeal> {
                     minLines: 1,
                     maxLines: null,
                     decoration:
-                        const InputDecoration(label: Text('Ingridients')),
+                        const InputDecoration(label: Text('Ingredients')),
                     validator: (value) {
                       if (value == null) {
-                        return 'Ingridients must be filled!';
+                        return 'Ingredients must be filled!';
                       }
                       return null;
                     },
-                    onSaved: ((newValue) => _enteredTitle = newValue!),
+                    onSaved: ((newValue) =>
+                        _enteredIngredients = newValue!.split('\n')),
                   ),
                   TextFormField(
                     minLines: 1,
@@ -138,7 +169,8 @@ class _NewMealState extends ConsumerState<NewMeal> {
                       }
                       return null;
                     },
-                    onSaved: ((newValue) => _enteredTitle = newValue!),
+                    onSaved: ((newValue) =>
+                        _enteredSteps = newValue!.split('\n')),
                   ),
                   const SizedBox(height: 15),
 
@@ -284,7 +316,10 @@ class _NewMealState extends ConsumerState<NewMeal> {
                     children: [
                       OutlinedButton(
                         onPressed: () {
-                          _onsave();
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            _onsave();
+                          }
                         },
                         child: const Text('Submit'),
                       ),
